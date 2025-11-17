@@ -16,7 +16,7 @@ public class LooselyCoupledService {
 
     public static void main(String[] args) {
 
-        // Inject LooselyBubbleSortAlgorithm vào service (loose coupling)
+        // Tạo service với thuật toán BubbleSort (loose coupling)
         LooselyCoupledService service =
                 new LooselyCoupledService(new LooselyBubbleSortAlgorithm());
 
