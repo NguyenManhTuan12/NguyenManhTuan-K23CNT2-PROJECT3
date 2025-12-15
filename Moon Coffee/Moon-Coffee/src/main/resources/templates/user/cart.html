@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Giỏ Hàng - Moon Coffee</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Poppins', sans-serif; background: #f9f9f9; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
+        h1 { text-align: center; color: #333; margin-bottom: 30px; }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 15px; border-bottom: 2px solid #eee; color: #666; }
+        td { padding: 15px; border-bottom: 1px solid #eee; vertical-align: middle; }
+        .item-img { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; margin-right: 10px; }
+        .btn-qty { background: #eee; border: none; width: 30px; height: 30px; border-radius: 5px; text-decoration: none; color: black; display: inline-flex; justify-content: center; align-items: center; font-weight: bold;}
+        .total-price { font-size: 24px; font-weight: bold; color: #e17055; text-align: right; margin-top: 20px;}
+        .btn-home { display: inline-block; margin-top: 20px; text-decoration: none; color: #666; }
+
+        /* Nút Thanh toán */
+        .btn-pay { float: right; background: #e17055; color: white; padding: 10px 30px; border-radius: 30px; text-decoration: none; margin-top: 20px; font-weight: bold; transition: 0.3s; }
+        .btn-pay:hover { background: #d63031; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4); }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1><i class="fas fa-shopping-cart"></i> Giỏ Hàng</h1>
+
+    <div th:if="${cartItems.empty}" style="text-align: center; padding: 40px;">
+        <i class="fas fa-shopping-basket" style="font-size: 50px; color: #ddd; margin-bottom: 20px;"></i>
+        <p>Giỏ hàng chưa có gì cả!</p>
+        <a href="/" class="btn-pay" style="float: none; display: inline-block;">Đi chọn món ngay</a>
+    </div>
+
+    <div th:if="${!cartItems.empty}">
+        <table>
+            <thead>
+            <tr><th>Sản phẩm</th><th>Giá</th><th>Số lượng</th><th>Tổng</th><th></th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${cartItems}">
+                <td style="display: flex; align-items: center;">
+                    <img th:if="${item.imageName != null}" th:src="@{'/images/products/' + ${item.imageName}}" class="item-img">
+                    <img th:if="${item.imageName == null}" src="https://images.unsplash.com/photo-1541167760496-1628856ab772?q=80&w=1937" class="item-img">
+                    <span th:text="${item.name}" style="font-weight: 600;"></span>
+                </td>
+                <td th:text="${#numbers.formatDecimal(item.price, 0, 'POINT', 0, 'POINT')} + ' đ'"></td>
+                <td>
+                    <a th:href="@{/cart/update(id=${item.id}, quantity=${item.quantity - 1})}" class="btn-qty">-</a>
+                    <span th:text="${item.quantity}" style="margin: 0 10px;"></span>
+                    <a th:href="@{/cart/update(id=${item.id}, quantity=${item.quantity + 1})}" class="btn-qty">+</a>
+                </td>
+                <td th:text="${#numbers.formatDecimal(item.price * item.quantity, 0, 'POINT', 0, 'POINT')} + ' đ'" style="color: #e17055; font-weight: bold;"></td>
+                <td><a th:href="@{/cart/remove/{id}(id=${item.id})}" style="color: red;"><i class="fas fa-trash"></i></a></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="total-price">
+            Tổng cộng: <span th:text="${#numbers.formatDecimal(totalPrice, 0, 'POINT', 0, 'POINT')} + ' đ'"></span>
+        </div>
+
+        <a href="/" class="btn-home">← Tiếp tục mua hàng</a>
+
+        <a href="/checkout" class="btn-pay">Thanh Toán Ngay <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+</body>
+</html>

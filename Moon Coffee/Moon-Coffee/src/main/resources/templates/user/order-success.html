@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Đặt Hàng Thành Công</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f4f6f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .container { display: flex; gap: 40px; background: white; padding: 50px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 900px; width: 90%; }
+
+        .success-info { flex: 1; text-align: left; }
+        h1 { color: #27ae60; margin-bottom: 10px; font-size: 28px; }
+        .order-id { font-size: 18px; color: #555; margin-bottom: 20px; }
+        .details p { margin: 8px 0; color: #333; }
+        .note { background: #fff3cd; color: #856404; padding: 15px; border-radius: 10px; margin-top: 20px; font-size: 14px; line-height: 1.5; }
+
+        .qr-section { flex: 1; text-align: center; border-left: 2px dashed #eee; padding-left: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .qr-img { width: 100%; max-width: 250px; border-radius: 10px; border: 2px solid #eee; margin-bottom: 10px;}
+        .scan-text { font-weight: bold; color: #333; margin-bottom: 5px; }
+
+        .btn-home { display: inline-block; background: #333; color: white; padding: 12px 30px; border-radius: 30px; text-decoration: none; margin-top: 25px; font-weight: 600; transition: 0.3s; }
+        .btn-home:hover { background: #e17055; }
+
+        @media (max-width: 768px) {
+            .container { flex-direction: column; padding: 30px; }
+            .qr-section { border-left: none; border-top: 2px dashed #eee; padding-left: 0; padding-top: 30px; margin-top: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" th:if="${order != null}">
+    <div class="success-info">
+        <h1><i class="fas fa-check-circle"></i> Đặt Hàng Thành Công!</h1>
+        <p class="order-id">Mã đơn hàng: <strong th:text="'#' + ${order.id}">#000</strong></p>
+
+        <div class="details">
+            <p><i class="fas fa-user"></i> Khách hàng: <strong th:text="${order.customerName}">Tên khách</strong></p>
+            <p><i class="fas fa-phone"></i> SĐT: <span th:text="${order.customerPhone}">09xx...</span></p>
+            <p><i class="fas fa-map-marker-alt"></i> Địa chỉ: <span th:text="${order.customerAddress}">Địa chỉ...</span></p>
+            <p style="font-size: 20px; margin-top: 15px;">
+                Tổng thanh toán:
+                <strong style="color: #e17055;" th:text="${#numbers.formatDecimal(order.totalPrice, 0, 'POINT', 0, 'POINT')} + ' đ'">0 đ</strong>
+            </p>
+        </div>
+
+        <div class="note">
+            <i class="fas fa-info-circle"></i>
+            Vui lòng quét mã bên cạnh để thanh toán. <br>
+            Nội dung chuyển khoản đã được điền tự động.
+        </div>
+
+        <a href="/" class="btn-home">Tiếp tục mua sắm</a>
+    </div>
+
+    <div class="qr-section">
+        <p class="scan-text">Quét mã để thanh toán nhanh</p>
+
+        <img th:src="@{/images/products/qr.png}"
+             class="qr-img"
+             alt="Mã QR Thanh Toán">
+        <p style="font-size: 13px; color: #888;">
+            Ngân hàng: <strong>MB Bank</strong> <br>
+            Chủ TK: <strong>Nguyễn Mạnh Tuấn</strong>
+        </p>
+    </div>
+</div>
+
+<div class="container" th:if="${order == null}" style="text-align: center; display: block;">
+    <h1>🎉 Cảm ơn bạn!</h1>
+    <p>Đơn hàng đã được ghi nhận.</p>
+    <a href="/" class="btn-home">Về trang chủ</a>
+</div>
+
+</body>
+</html>
