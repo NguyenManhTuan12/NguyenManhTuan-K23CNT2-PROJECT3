@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Giỏ Hàng - Moon Coffee</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary: #0f2c38; --accent: #c5a065; --bg: #f8f9fa; }
+        body { font-family: 'Nunito', sans-serif; background: var(--bg); color: #333; margin: 0; padding: 20px; }
+
+        .container { max-width: 1100px; margin: 0 auto; }
+        .page-title { text-align: center; color: var(--primary); margin-bottom: 30px; text-transform: uppercase; font-weight: 800; }
+
+        /* Bố cục 2 cột: Danh sách & Tổng tiền */
+        .cart-wrapper { display: grid; grid-template-columns: 2.5fr 1fr; gap: 30px; align-items: start; }
+
+        /* Cột trái: Danh sách sản phẩm */
+        .cart-table-box { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; color: #777; font-size: 13px; text-transform: uppercase; padding-bottom: 15px; border-bottom: 2px solid #eee; }
+        td { padding: 20px 0; border-bottom: 1px solid #eee; vertical-align: middle; }
+
+        .product-col { display: flex; align-items: center; gap: 15px; }
+        .p-img { width: 70px; height: 70px; border-radius: 8px; object-fit: cover; border: 1px solid #eee; }
+        .p-name { font-weight: 700; color: var(--primary); font-size: 16px; display: block; }
+        .p-price { color: #888; font-size: 14px; }
+
+        /* Bộ điều chỉnh số lượng */
+        .qty-control { display: flex; align-items: center; background: #f1f1f1; border-radius: 30px; width: fit-content; padding: 5px; }
+        .qty-btn { width: 30px; height: 30px; border: none; background: white; border-radius: 50%; cursor: pointer; color: var(--primary); font-weight: bold; transition: 0.2s; display: flex; align-items: center; justify-content: center; text-decoration: none; }
+        .qty-btn:hover { background: var(--accent); color: white; }
+        .qty-input { width: 40px; text-align: center; background: transparent; border: none; font-weight: bold; }
+
+        .total-item { color: var(--accent); font-weight: bold; font-size: 16px; }
+        .btn-remove { color: #e74c3c; background: none; border: none; cursor: pointer; font-size: 18px; transition: 0.3s; }
+        .btn-remove:hover { transform: scale(1.2); }
+
+        /* Cột phải: Tổng kết & Mã giảm giá */
+        .summary-box { background: var(--primary); color: white; border-radius: 12px; padding: 30px; position: sticky; top: 20px; }
+        .summary-title { font-size: 20px; font-weight: 700; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px; }
+
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 15px; }
+        .summary-total { display: flex; justify-content: space-between; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2); font-size: 22px; font-weight: 800; color: var(--accent); }
+
+        /* Form mã giảm giá */
+        .coupon-form { margin-bottom: 25px; position: relative; }
+        .coupon-input { width: 100%; padding: 12px; border-radius: 6px; border: none; outline: none; padding-right: 90px; box-sizing: border-box; }
+        .btn-apply { position: absolute; right: 5px; top: 5px; background: var(--accent); color: var(--primary); border: none; padding: 7px 15px; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 12px; }
+        .btn-apply:hover { background: white; }
+
+        .applied-badge { background: rgba(46, 204, 113, 0.2); border: 1px solid #2ecc71; color: #2ecc71; padding: 10px; border-radius: 6px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+        .btn-remove-coupon { color: #e74c3c; text-decoration: none; font-weight: bold; font-size: 18px; }
+
+        .btn-checkout { display: block; width: 100%; background: var(--accent); color: var(--primary); text-align: center; padding: 15px; border-radius: 30px; font-weight: 800; text-transform: uppercase; text-decoration: none; transition: 0.3s; margin-top: 20px; }
+        .btn-checkout:hover { background: white; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+
+        /* Nút quay lại */
+        .btn-back { display: inline-block; margin-top: 20px; color: #666; text-decoration: none; font-size: 14px; }
+        .btn-back:hover { color: var(--primary); text-decoration: underline; }
+
+        /* Thông báo */
+        .alert { padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; }
+        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+        .empty-cart { text-align: center; padding: 50px; background: white; border-radius: 12px; }
+        .empty-cart i { font-size: 60px; color: #ddd; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 class="page-title"><i class="fas fa-shopping-cart"></i> Giỏ Hàng Của Bạn</h1>
+
+    <div th:if="${successMsg}" class="alert alert-success"><i class="fas fa-check-circle"></i> <span th:text="${successMsg}"></span></div>
+    <div th:if="${errorMsg}" class="alert alert-error"><i class="fas fa-exclamation-triangle"></i> <span th:text="${errorMsg}"></span></div>
+
+    <div th:if="${cartItems.isEmpty()}" class="empty-cart">
+        <i class="fas fa-shopping-basket"></i>
+        <h3>Chưa có món nào trong giỏ!</h3>
+        <p>Hãy quay lại thực đơn để chọn món yêu thích nhé.</p>
+        <a href="/" class="btn-checkout" style="width: 200px; margin: 20px auto;">Xem Thực Đơn</a>
+    </div>
+
+    <div th:unless="${cartItems.isEmpty()}" class="cart-wrapper">
+
+        <div class="cart-table-box">
+            <table>
+                <thead>
+                <tr>
+                    <th style="width: 45%;">Sản phẩm</th>
+                    <th style="width: 20%;">Số lượng</th>
+                    <th style="width: 20%;">Thành tiền</th>
+                    <th style="width: 15%; text-align: center;">Xóa</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${cartItems}">
+                    <td>
+                        <div class="product-col">
+                            <img th:if="${item.imageName != null}" th:src="@{'/images/products/' + ${item.imageName}}" class="p-img">
+                            <img th:if="${item.imageName == null}" src="https://via.placeholder.com/70" class="p-img">
+                            <div>
+                                <span class="p-name" th:text="${item.name}">Tên Món</span>
+                                <span class="p-price" th:text="${#numbers.formatDecimal(item.price, 0, 'POINT', 0, 'POINT')} + ' đ'">0 đ</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="qty-control">
+                            <a th:href="@{/cart/update(id=${item.productId}, quantity=${item.quantity - 1})}" class="qty-btn"><i class="fas fa-minus"></i></a>
+
+                            <input type="text" class="qty-input" th:value="${item.quantity}" readonly>
+
+                            <a th:href="@{/cart/update(id=${item.productId}, quantity=${item.quantity + 1})}" class="qty-btn"><i class="fas fa-plus"></i></a>
+                        </div>
+                    </td>
+                    <td class="total-item" th:text="${#numbers.formatDecimal(item.price * item.quantity, 0, 'POINT', 0, 'POINT')} + ' đ'">
+                        0 đ
+                    </td>
+                    <td style="text-align: center;">
+                        <a th:href="@{/cart/remove/{id}(id=${item.productId})}" class="btn-remove" onclick="return confirm('Xóa món này khỏi giỏ?');">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <a href="/" class="btn-back"><i class="fas fa-arrow-left"></i> Tiếp tục chọn món</a>
+        </div>
+
+        <div class="summary-box">
+            <div class="summary-title">Tóm Tắt Đơn Hàng</div>
+
+            <div th:if="${discount == 0}">
+                <form action="/cart/apply-coupon" method="post" class="coupon-form">
+                    <input type="text" name="couponCode" class="coupon-input" placeholder="Nhập mã giảm giá..." required>
+                    <button type="submit" class="btn-apply">Áp Dụng</button>
+                </form>
+            </div>
+
+            <div th:if="${discount > 0}" class="applied-badge">
+                <span><i class="fas fa-tag"></i> Mã <b>[[${session.appliedCouponCode}]]</b> đang dùng</span>
+                <a href="/cart/remove-coupon" class="btn-remove-coupon" title="Hủy mã này">&times;</a>
+            </div>
+
+            <div class="summary-row">
+                <span>Tạm tính:</span>
+                <span th:text="${#numbers.formatDecimal(subtotal, 0, 'POINT', 0, 'POINT')} + ' đ'">0 đ</span>
+            </div>
+
+            <div class="summary-row" th:if="${discount > 0}">
+                <span>Giảm giá:</span>
+                <span style="color: #2ecc71;" th:text="'- ' + ${#numbers.formatDecimal(discount, 0, 'POINT', 0, 'POINT')} + ' đ'">- 0 đ</span>
+            </div>
+
+            <div class="summary-total">
+                <span>TỔNG CỘNG:</span>
+                <span th:text="${#numbers.formatDecimal(finalPrice, 0, 'POINT', 0, 'POINT')} + ' đ'">0 đ</span>
+            </div>
+
+            <a href="/checkout" class="btn-checkout">Tiến Hành Thanh Toán <i class="fas fa-arrow-right"></i></a>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

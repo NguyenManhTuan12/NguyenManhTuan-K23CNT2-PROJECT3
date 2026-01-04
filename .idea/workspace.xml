@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="172d1fdd-f3a5-47be-9b12-4aeb4ffdd44b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/.idea/Moon Coffee.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/.gitattributes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/src/main/java/Moon/Coffee/MoonCoffeeApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/src/main/java/Moon/Coffee/config/SecurityConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/src/main/java/Moon/Coffee/config/WebConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/src/main/java/Moon/Coffee/controller/CartController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/src/main/java/Moon/Coffee/controller/HomeController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/src/main/java/Moon/Coffee/controller/LoginController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/src/main/java/Moon/Coffee/controller/OrderController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/src/main/java/Moon/Coffee/controller/ProductController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/src/main/java/Moon/Coffee/entity/CartItem.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/src/main/java/Moon/Coffee/entity/Category.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/src/main/java/Moon/Coffee/entity/Order.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/src/main/java/Moon/Coffee/entity/OrderDetail.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/src/main/java/Moon/Coffee/entity/Product.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/src/main/java/Moon/Coffee/repository/CategoryRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/src/main/java/Moon/Coffee/repository/OrderRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/src/main/java/Moon/Coffee/repository/ProductRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/src/main/java/Moon/Coffee/service/CartService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/src/main/java/Moon/Coffee/service/ImageService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/src/main/resources/static/hu.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/src/main/resources/templates/admin/add-product.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/src/main/resources/templates/home.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/src/main/resources/templates/user/cart.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/src/main/resources/templates/user/checkout.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/src/main/resources/templates/user/login.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/Moon-Coffee/src/main/resources/templates/user/order-success.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/src/main/resources/static/images/Croissant.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/src/main/resources/static/images/Espresso.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/src/main/resources/static/images/Latte.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/src/main/resources/static/images/Travai.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/src/main/resources/static/images/matcha.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/src/main/resources/static/images/products/05b04a5f-48fb-403e-b027-61c6ad0d5021_tradaocamxa.png.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/src/main/resources/static/images/products/64fbc205-03e4-4a03-b217-2bd7adf5e4bc_matcha.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/src/main/resources/static/images/products/6c11ded3-bb3a-4e5d-a290-9d7ea095a285_Croissant.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/src/main/resources/static/images/products/add0733a-21c1-421f-801e-79a8669d005e_Espresso.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/src/main/resources/static/images/products/b36f6d8b-bcab-49c7-816b-666f34cb2d40_Latte.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/src/main/resources/static/images/products/d88be768-f3df-495e-99b5-e992a746e43d_tradaocamxa.png.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/src/main/resources/static/images/products/dcb6096a-6558-48e9-86dd-26dec952ba11_Croissant.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/src/main/resources/static/images/products/e09e0b26-1247-4eee-9387-7becb56a61c3_Travai.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/src/main/resources/static/images/products/qr.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Moon Coffee/src/main/resources/static/images/tradaocamxa.png.png" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 0
+}]]></component>
+  <component name="ProjectId" id="37WhlGKfQSotIuVtmLUsBW3OlSH" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "E:/NguyenManhTuan-K23CNT2-PROJECT3/NguyenManhTuan-K23CNT2-PROJECT3",
+    "to.speed.mode.migration.done": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.26830.84" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="172d1fdd-f3a5-47be-9b12-4aeb4ffdd44b" name="Changes" comment="" />
+      <created>1767024883297</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1767024883297</updated>
+    </task>
+    <servers />
+  </component>
+</project>

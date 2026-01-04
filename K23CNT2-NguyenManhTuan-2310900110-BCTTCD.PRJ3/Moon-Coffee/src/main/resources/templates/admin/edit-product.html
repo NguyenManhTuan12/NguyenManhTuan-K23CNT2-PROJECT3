@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cập Nhật Sản Phẩm - Moon Coffee</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* CSS GIAO DIỆN ADMIN MOON COFFEE */
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
+        body { display: flex; min-height: 100vh; background-color: #f4f6f9; }
+
+        /* Sidebar Style */
+        .sidebar { width: 260px; background-color: #2d3436; color: #fff; padding: 20px; display: flex; flex-direction: column; position: fixed; height: 100vh; }
+        .logo { font-size: 22px; font-weight: bold; margin-bottom: 30px; text-align: center; color: #fab1a0; }
+        .menu-list { list-style: none; }
+        .menu-item { margin-bottom: 5px; }
+        .menu-item a { display: flex; align-items: center; gap: 10px; padding: 12px; color: #b2bec3; text-decoration: none; border-radius: 6px; transition: 0.3s; }
+        .menu-item:hover a, .menu-item.active a { background: rgba(255,255,255,0.1); color: white; }
+
+        /* Main Content Style */
+        .main-content { flex: 1; padding: 40px; margin-left: 260px; }
+        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); max-width: 800px; margin: 0 auto; }
+
+        /* Form Elements */
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; margin-bottom: 8px; font-weight: 600; color: #2d3436; }
+        .form-control { width: 100%; padding: 10px; border: 1px solid #dfe6e9; border-radius: 6px; font-size: 14px; transition: 0.3s; }
+        .form-control:focus { border-color: #fab1a0; outline: none; box-shadow: 0 0 0 3px rgba(250, 177, 160, 0.2); }
+
+        /* Buttons */
+        .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; transition: 0.2s; }
+        .btn-primary { background: #0984e3; color: white; }
+        .btn-primary:hover { background: #74b9ff; transform: translateY(-2px); }
+        .btn-secondary { background: #b2bec3; color: #2d3436; text-decoration: none; display: inline-block; margin-left: 10px; }
+        .btn-secondary:hover { background: #dfe6e9; }
+
+        /* Image Preview */
+        .current-img-box { margin-top: 10px; padding: 10px; border: 1px dashed #ccc; border-radius: 8px; display: inline-block; }
+        .current-img { width: 100px; height: 100px; object-fit: cover; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+<nav class="sidebar">
+    <div class="logo">☕ MOON ADMIN</div>
+    <ul class="menu-list">
+        <li class="menu-item"><a href="/"><i class="fas fa-home"></i> Trang Chủ</a></li>
+        <li class="menu-item active"><a href="/admin/add-product"><i class="fas fa-coffee"></i> Quản lý Sản Phẩm</a></li>
+        <li class="menu-item"><a href="/admin/orders"><i class="fas fa-clipboard-list"></i> Quản lý Đơn Hàng</a></li>
+        <li class="menu-item"><a href="/admin/revenue"><i class="fas fa-chart-line"></i> Doanh Thu</a></li>
+        <li class="menu-item" style="margin-top: auto;"><a href="/logout" style="color: #ff7675;"><i class="fas fa-sign-out-alt"></i> Đăng Xuất</a></li>
+    </ul>
+</nav>
+
+<main class="main-content">
+    <div class="card">
+        <h2 style="margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 15px; color: #2d3436;">
+            ✏️ Cập Nhật Sản Phẩm
+        </h2>
+
+        <form th:action="@{/admin/products/save}" th:object="${product}" method="post" enctype="multipart/form-data">
+
+            <input type="hidden" th:field="*{id}">
+
+            <div class="form-group">
+                <label class="form-label">Tên sản phẩm:</label>
+                <input type="text" th:field="*{name}" class="form-control" placeholder="Nhập tên món..." required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Giá bán (VNĐ):</label>
+                <input type="number" th:field="*{price}" class="form-control" placeholder="Nhập giá tiền..." required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Danh mục:</label>
+                <select th:field="*{category}" class="form-control">
+                    <option th:each="cat : ${categories}"
+                            th:value="${cat.id}"
+                            th:text="${cat.name}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Hình ảnh:</label>
+
+                <div th:if="${product.imageName != null}" class="current-img-box">
+                    <div style="font-size: 12px; margin-bottom: 5px; color: #666;">Ảnh hiện tại:</div>
+                    <img th:src="@{'/images/products/' + ${product.imageName}}" class="current-img">
+                </div>
+
+                <div style="margin-top: 10px;">
+                    <label style="font-size: 13px; color: #666;">Chọn ảnh mới (nếu muốn thay đổi):</label>
+                    <input type="file" name="imageFile" class="form-control" style="padding: 6px;" accept="image/*">
+                </div>
+            </div>
+
+            <div style="margin-top: 30px; display: flex; align-items: center;">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Lưu Cập Nhật</button>
+                <a href="/admin/add-product" class="btn btn-secondary">Hủy bỏ</a>
+            </div>
+        </form>
+    </div>
+</main>
+
+</body>
+</html>

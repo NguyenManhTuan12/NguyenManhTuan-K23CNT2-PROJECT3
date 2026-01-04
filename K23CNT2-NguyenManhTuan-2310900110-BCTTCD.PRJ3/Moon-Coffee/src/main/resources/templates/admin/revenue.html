@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Doanh Thu - Moon Coffee</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS giữ nguyên như bạn đã thiết kế */
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
+        body { display: flex; min-height: 100vh; background-color: #f4f6f9; }
+        .sidebar { width: 260px; background-color: #2d3436; color: #fff; padding: 20px; display: flex; flex-direction: column; }
+        .menu-item { padding: 12px; margin-bottom: 5px; cursor: pointer; color: #b2bec3; border-radius: 6px; text-decoration: none; display: block; }
+        .menu-item:hover, .menu-item.active { background: rgba(255,255,255,0.1); color: white; }
+
+        .main-content { flex: 1; padding: 40px; }
+        .stats-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; margin-top: 20px; }
+        .stat-card { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 25px; transition: 0.3s; }
+        .stat-card:hover { transform: translateY(-5px); }
+
+        .icon-box { width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 35px; }
+        .blue-icon { background: #e0f2fe; color: #0284c7; }
+        .green-icon { background: #dcfce7; color: #16a34a; }
+
+        .info h3 { font-size: 16px; color: #888; margin-bottom: 5px; font-weight: normal; }
+        .info p { font-size: 36px; font-weight: 800; color: #2d3436; margin: 0; }
+    </style>
+</head>
+<body>
+
+<nav class="sidebar">
+    <div style="font-size: 22px; font-weight: bold; margin-bottom: 30px; text-align: center; color: #fab1a0;">☕ MOON COFFEE</div>
+
+    <a href="/" class="menu-item">🏠 Về Trang Chủ</a>
+    <a href="/admin/add-product" class="menu-item">Danh sách đồ uống</a>
+    <a href="/admin/revenue" class="menu-item active">Doanh thu</a>
+    <a href="/logout" class="menu-item" style="color: #ff7675; margin-top: 30px;">🚪 Đăng Xuất</a>
+</nav>
+
+<main class="main-content">
+    <h1>Báo Cáo Hoạt Động</h1>
+    <p style="color: #666;">Tổng hợp tình hình kinh doanh của quán.</p>
+
+    <div class="stats-container">
+        <div class="stat-card">
+            <div class="icon-box green-icon"><i class="fas fa-sack-dollar"></i></div>
+            <div class="info">
+                <h3>Tổng Doanh Thu</h3>
+                <p th:text="${#numbers.formatDecimal(revenue, 0, 'POINT', 0, 'POINT')} + ' đ'">0 đ</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="icon-box blue-icon"><i class="fas fa-shopping-cart"></i></div>
+            <div class="info">
+                <h3>Số Đơn Đã Bán</h3>
+                <p th:text="${ordersCount} + ' đơn'">0 đơn</p>
+            </div>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

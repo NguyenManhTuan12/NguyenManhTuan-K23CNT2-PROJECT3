@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản Lý Mã Giảm Giá - Moon Coffee Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #0f2c38; --accent: #c5a065; --bg: #f4f7f6; --white: #ffffff; }
+        body { font-family: 'Nunito', sans-serif; background-color: var(--bg); margin: 0; padding: 20px; }
+        .admin-container { max-width: 1100px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .header h2 { color: var(--primary); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Form thêm mới */
+        .card { background: var(--white); padding: 25px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        .grid-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .form-group { display: flex; flex-direction: column; gap: 5px; }
+        label { font-weight: 700; font-size: 14px; color: #555; }
+        input { padding: 10px; border: 1px solid #ddd; border-radius: 6px; outline: none; }
+        .btn-save { background: var(--primary); color: var(--white); border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 20px; transition: 0.3s; }
+        .btn-save:hover { background: var(--accent); }
+
+        /* Bảng danh sách */
+        table { width: 100%; border-collapse: collapse; background: var(--white); border-radius: 12px; overflow: hidden; }
+        th { background: var(--primary); color: var(--accent); padding: 15px; text-align: left; }
+        td { padding: 15px; border-bottom: 1px solid #eee; }
+        .status-active { color: #27ae60; font-weight: bold; }
+        .status-expired { color: #e74c3c; font-weight: bold; }
+        .btn-delete { color: #e74c3c; cursor: pointer; border: none; background: none; font-size: 18px; }
+    </style>
+</head>
+<body>
+
+<div class="admin-container">
+    <div class="header">
+        <h2><i class="fas fa-ticket-alt"></i> Quản lý Coupon</h2>
+        <a href="/admin" style="text-decoration: none; color: #666;"><i class="fas fa-arrow-left"></i> Quay lại Dashboard</a>
+    </div>
+
+    <div class="card">
+        <h3 style="margin-top:0">Tạo mã giảm giá mới</h3>
+        <form th:action="@{/admin/coupons/save}" th:object="${newCoupon}" method="post">
+            <div class="grid-form">
+                <div class="form-group">
+                    <label>Mã Coupon (VD: MOON2025)</label>
+                    <input type="text" th:field="*{code}" required placeholder="Nhập mã...">
+                </div>
+                <div class="form-group">
+                    <label>Giá trị giảm (VNĐ)</label>
+                    <input type="number" th:field="*{discountValue}" required placeholder="VD: 20000">
+                </div>
+                <div class="form-group">
+                    <label>Giới hạn sử dụng</label>
+                    <input type="number" th:field="*{usageLimit}" required placeholder="VD: 100">
+                </div>
+                <div class="form-group">
+                    <label>Ngày hết hạn</label>
+                    <input type="date" th:field="*{expiryDate}" required>
+                </div>
+            </div>
+            <button type="submit" class="btn-save">Lưu mã giảm giá</button>
+        </form>
+    </div>
+
+    <div class="card" style="padding: 0;">
+        <table>
+            <thead>
+            <tr>
+                <th>Mã</th>
+                <th>Giảm giá</th>
+                <th>Đã dùng</th>
+                <th>Giới hạn</th>
+                <th>Hết hạn</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="coupon : ${coupons}">
+                <td th:text="${coupon.code}" style="font-weight: bold; color: var(--primary);"></td>
+                <td th:text="${#numbers.formatDecimal(coupon.discountValue, 0, 'POINT', 0, 'POINT')} + ' đ'"></td>
+                <td th:text="${coupon.usedCount}">0</td>
+                <td th:text="${coupon.usageLimit}">100</td>
+                <td th:text="${#dates.format(coupon.expiryDate, 'dd/MM/yyyy')}"></td>
+                <td>
+                    <span th:if="${coupon.active}" class="status-active">Đang chạy</span>
+                    <span th:unless="${coupon.active}" class="status-expired">Tạm dừng</span>
+                </td>
+                <td>
+                    <a th:href="@{/admin/coupons/delete/{id}(id=${coupon.id})}"
+                       onclick="return confirm('Xóa mã này?')" class="btn-delete">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(coupons)}">
+                <td colspan="7" style="text-align: center; padding: 30px; color: #999;">Chưa có mã giảm giá nào được tạo.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

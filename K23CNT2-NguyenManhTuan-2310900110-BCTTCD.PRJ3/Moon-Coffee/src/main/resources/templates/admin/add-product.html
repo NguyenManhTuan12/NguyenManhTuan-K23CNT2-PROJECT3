@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Quán Cà Phê - Moon Coffee</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
+        body { display: flex; min-height: 100vh; background-color: #f4f6f9; }
+
+        /* Sidebar */
+        .sidebar { width: 260px; background-color: #2d3436; color: #fff; padding: 20px; display: flex; flex-direction: column; position: fixed; height: 100vh; }
+        .logo { font-size: 22px; font-weight: bold; margin-bottom: 30px; text-align: center; color: #fab1a0; }
+        .btn-menu-add { background: linear-gradient(135deg, #e17055 0%, #d63031 100%); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-bottom: 30px; display: flex; justify-content: center; gap: 8px; transition: 0.2s; }
+        .btn-menu-add:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(214, 48, 49, 0.4); }
+
+        .menu-list { list-style: none; }
+        .menu-item { margin-bottom: 5px; border-radius: 6px; transition: 0.3s; }
+        .menu-item a { display: block; padding: 12px; color: #b2bec3; text-decoration: none; width: 100%; display: flex; align-items: center; gap: 10px; }
+        .menu-item:hover, .menu-item.active { background: rgba(255,255,255,0.1); }
+        .menu-item:hover a, .menu-item.active a { color: white; }
+
+        /* Main Content */
+        .main-content { flex: 1; padding: 40px; margin-left: 260px; }
+        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+
+        /* Table */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { text-align: left; padding: 15px; background-color: #f8f9fa; color: #666; border-bottom: 2px solid #ddd; text-transform: uppercase; font-size: 13px; }
+        td { padding: 15px; border-bottom: 1px solid #eee; color: #333; vertical-align: middle; }
+        tr:hover { background-color: #fcfcfc; }
+        .table-img { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 1px solid #eee; transition: 0.3s; }
+        .table-img:hover { transform: scale(1.1); }
+
+        /* Nút Hành Động */
+        .action-btn { display: inline-flex; align-items: center; justify-content: center; gap: 5px; padding: 8px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; border: 1px solid transparent; text-decoration: none; }
+        .btn-edit { background-color: #e0f2fe; color: #0284c7; border-color: #bae6fd; margin-right: 5px; }
+        .btn-edit:hover { background-color: #0284c7; color: white; }
+        .btn-delete { background-color: #fef2f2; color: #dc2626; border-color: #fecaca; }
+        .btn-delete:hover { background-color: #dc2626; color: white; }
+
+        /* Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 1000; opacity: 0; transition: 0.3s; }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        .modal-box { background: white; padding: 30px; border-radius: 15px; width: 450px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); transform: translateY(-20px); transition: 0.3s; }
+        .modal-overlay.active .modal-box { transform: translateY(0); }
+
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #2d3436; }
+        .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; outline: none; transition: 0.2s; }
+        .form-group input:focus { border-color: #e17055; }
+
+        .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px; }
+        .btn { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn-cancel { background: #eee; color: #636e72; }
+        .btn-save { background: #e17055; color: white; }
+    </style>
+</head>
+<body>
+
+<nav class="sidebar">
+    <div class="logo">☕ MOON COFFEE</div>
+    <button class="btn-menu-add" onclick="toggleModal()">
+        <i class="fas fa-plus"></i> Thêm Món Mới
+    </button>
+
+    <ul class="menu-list">
+        <li class="menu-item">
+            <a href="/"> <i class="fas fa-home"></i> Về Trang Chủ </a>
+        </li>
+        <li class="menu-item active">
+            <a href="/admin/add-product"> <i class="fas fa-coffee"></i> Danh sách đồ uống </a>
+        </li>
+        <li class="menu-item">
+            <a href="/admin/coupons"> <i class="fas fa-ticket-alt"></i> Quản lý mã giảm giá </a>
+        </li>
+        <li class="menu-item">
+            <a href="/admin/orders"> <i class="fas fa-shopping-cart"></i> Quản lý đơn hàng </a>
+        </li>
+        <li class="menu-item">
+            <a href="/admin/revenue"> <i class="fas fa-chart-line"></i> Doanh thu </a>
+        </li>
+        <li class="menu-item" style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+            <a href="/logout" style="color: #ff7675;"> <i class="fas fa-sign-out-alt"></i> Đăng Xuất </a>
+        </li>
+    </ul>
+</nav>
+
+<main class="main-content">
+    <div class="card">
+        <h1 style="color: #2d3436; margin-bottom: 10px;">Quản Lý Sản Phẩm</h1>
+        <p style="color: #636e72; margin-bottom: 30px;">Danh sách các món trong menu hiện tại của quán.</p>
+
+        <table>
+            <thead>
+            <tr>
+                <th style="width: 50px;">STT</th>
+                <th>Ảnh</th>
+                <th>Tên món</th>
+                <th>Danh mục</th>
+                <th>Giá bán</th>
+                <th style="text-align: right;">Hành động</th>
+            </tr>
+            </thead>
+            <tbody id="productTableBody">
+            <tr th:each="product, iterStat : ${products}">
+                <td th:text="${iterStat.count}">1</td>
+                <td>
+                    <img th:if="${product.imageName != null}"
+                         th:src="@{'/images/products/' + ${product.imageName}}"
+                         class="table-img" alt="Product image">
+                    <span th:if="${product.imageName == null}" style="color: #ccc; font-size: 12px;"> <i class="fas fa-image"></i> Trống</span>
+                </td>
+                <td style="font-weight: 600;" th:text="${product.name}">Tên món</td>
+                <td>
+                    <span class="badge" th:text="${product.category != null ? product.category.name : 'Chưa phân loại'}"
+                          style="background: #f1f2f6; padding: 4px 10px; border-radius: 20px; font-size: 12px; color: #636e72;">
+                        Danh mục
+                    </span>
+                </td>
+                <td style="color: #d63031; font-weight: bold;" th:text="${#numbers.formatDecimal(product.price, 0, 'POINT', 0, 'POINT')} + ' đ'">0 đ</td>
+                <td style="text-align: right;">
+                    <a th:href="@{/admin/product/edit/{id}(id=${product.id})}" class="action-btn btn-edit">
+                        <i class="fas fa-pen"></i> Sửa
+                    </a>
+                    <button class="action-btn btn-delete" th:onclick="'deleteProduct(' + ${product.id} + ')'">
+                        <i class="fas fa-trash"></i> Xóa
+                    </button>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(products)}">
+                <td colspan="6" style="text-align: center; padding: 50px; color: #999;">Chưa có sản phẩm nào trong danh sách.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<div class="modal-overlay" id="addModal">
+    <div class="modal-box">
+        <h2 style="margin-bottom: 20px;">Thêm Món Mới</h2>
+        <form id="addForm">
+            <div class="form-group">
+                <label>Tên món (*)</label>
+                <input type="text" id="inputName" placeholder="Ví dụ: Cà phê sữa đá" required>
+            </div>
+            <div class="form-group">
+                <label>Danh mục</label>
+                <select id="inputCategory">
+                    <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Giá tiền (*)</label>
+                <input type="number" id="inputPrice" placeholder="Ví dụ: 35000" required>
+            </div>
+            <div class="form-group" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                <label>Hình ảnh (Tùy chọn)</label>
+                <input type="file" id="inputImage" accept="image/png, image/jpeg, image/jpg">
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-cancel" onclick="toggleModal()">Hủy bỏ</button>
+                <button type="button" class="btn btn-save" id="btnSaveProduct" onclick="addProduct()">Lưu Lại</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function toggleModal() {
+        const modal = document.getElementById('addModal');
+        const isActive = modal.classList.toggle('active');
+        if (!isActive) document.getElementById("addForm").reset();
+    }
+
+    function addProduct() {
+        const btnSave = document.getElementById("btnSaveProduct");
+        const nameVal = document.getElementById("inputName").value.trim();
+        const priceVal = document.getElementById("inputPrice").value;
+        const catIdVal = document.getElementById("inputCategory").value;
+        const imageFile = document.getElementById("inputImage").files[0];
+
+        if(nameVal === "" || priceVal === "") {
+            alert("Vui lòng nhập đầy đủ tên và giá món!");
+            return;
+        }
+
+        btnSave.disabled = true;
+        btnSave.innerText = "Đang xử lý...";
+
+        const formData = new FormData();
+        formData.append("name", nameVal);
+        formData.append("price", priceVal);
+        formData.append("categoryId", catIdVal);
+        if (imageFile) formData.append("imageFile", imageFile);
+
+        fetch('/api/products/save', { method: 'POST', body: formData })
+        .then(response => {
+            if (response.ok) {
+                alert("Đã thêm món mới thành công!");
+                location.reload();
+            } else {
+                return response.text().then(text => { throw new Error(text) });
+            }
+        })
+        .catch(error => { alert("Lỗi: " + error.message); })
+        .finally(() => {
+            btnSave.disabled = false;
+            btnSave.innerText = "Lưu Lại";
+        });
+    }
+
+    function deleteProduct(id) {
+        if (confirm('Bạn có chắc chắn muốn xóa món này vĩnh viễn không?')) {
+            fetch('/api/products/delete/' + id, { method: 'DELETE' })
+            .then(async response => {
+                if (response.ok) {
+                    alert("Đã xóa món thành công!");
+                    location.reload();
+                } else {
+                    const errorMsg = await response.text();
+                    alert("Lỗi: " + (errorMsg || "Món đang tồn tại trong các đơn hàng cũ."));
+                }
+            })
+            .catch(error => { alert("Không kết nối được tới server."); });
+        }
+    }
+
+    document.getElementById('addModal').addEventListener('click', function(e) {
+        if (e.target === this) toggleModal();
+    });
+</script>
+
+</body>
+</html>

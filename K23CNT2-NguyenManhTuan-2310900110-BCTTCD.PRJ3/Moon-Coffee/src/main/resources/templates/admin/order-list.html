@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản Lý Đơn Hàng</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Tận dụng lại CSS cũ để tiết kiệm thời gian */
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
+        body { display: flex; min-height: 100vh; background-color: #f4f6f9; }
+        .sidebar { width: 260px; background-color: #2d3436; color: #fff; padding: 20px; display: flex; flex-direction: column; }
+        .menu-item { margin-bottom: 5px; border-radius: 6px; }
+        .menu-item a { display: block; padding: 12px; color: #b2bec3; text-decoration: none; }
+        .menu-item:hover a, .menu-item.active a { background: rgba(255,255,255,0.1); color: white; border-radius: 6px; }
+
+        .main-content { flex: 1; padding: 40px; }
+        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { text-align: left; padding: 15px; background: #f8f9fa; border-bottom: 2px solid #ddd; }
+        td { padding: 15px; border-bottom: 1px solid #eee; vertical-align: middle; }
+
+        .badge { padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .bg-pending { background: #fff3cd; color: #856404; }
+        .bg-completed { background: #d4edda; color: #155724; }
+
+        .btn-view { background: #e0f2fe; color: #0284c7; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-weight: 600; }
+        .btn-view:hover { background: #0284c7; color: white; }
+    </style>
+</head>
+<body>
+<nav class="sidebar">
+    <div style="text-align: center; margin-bottom: 30px; font-size: 22px; font-weight: bold; color: #fab1a0;">☕ MOON COFFEE</div>
+    <div class="menu-item"><a href="/">🏠 Về Trang Chủ</a></div>
+    <div class="menu-item"><a href="/admin/add-product">Danh sách đồ uống</a></div>
+    <div class="menu-item active"><a href="/admin/orders">Quản lý đơn hàng</a></div>
+    <div class="menu-item"><a href="/admin/revenue">Doanh thu</a></div>
+</nav>
+
+<main class="main-content">
+    <div class="card">
+        <h2>Danh Sách Đơn Hàng</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Mã</th>
+                <th>Khách hàng</th>
+                <th>Ngày đặt</th>
+                <th>Tổng tiền</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="order : ${orders}">
+                <td th:text="'#' + ${order.id}">#1</td>
+                <td>
+                    <div th:text="${order.customerName}" style="font-weight: bold;"></div>
+                    <div th:text="${order.customerPhone}" style="font-size: 12px; color: #888;"></div>
+                </td>
+                <td th:text="${#dates.format(order.orderDate, 'dd/MM/yyyy HH:mm')}"></td>
+                <td th:text="${#numbers.formatDecimal(order.totalPrice, 0, 'POINT', 0, 'POINT')} + ' đ'" style="color: red; font-weight: bold;"></td>
+                <td>
+                    <span th:if="${order.status == 'Pending'}" class="badge bg-pending">Chờ xử lý</span>
+                    <span th:if="${order.status == 'Completed'}" class="badge bg-completed">Hoàn thành</span>
+                </td>
+                <td>
+                    <a th:href="@{/admin/orders/detail/{id}(id=${order.id})}" class="btn-view"><i class="fas fa-eye"></i> Xem</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi Tiết Đơn Hàng #<span th:text="${order.id}"></span></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS dùng chung */
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
+        body { display: flex; min-height: 100vh; background-color: #f4f6f9; }
+
+        /* Sidebar */
+        .sidebar { width: 260px; background-color: #2d3436; color: #fff; padding: 20px; display: flex; flex-direction: column; position: fixed; height: 100vh; }
+        .logo { font-size: 22px; font-weight: bold; margin-bottom: 30px; text-align: center; color: #fab1a0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; }
+        .logo a { text-decoration: none; color: inherit; }
+        .menu-list { list-style: none; }
+        .menu-item { margin-bottom: 5px; border-radius: 6px; transition: 0.3s; }
+        .menu-item a { display: block; padding: 12px; color: #b2bec3; text-decoration: none; width: 100%; display: flex; align-items: center; gap: 10px; }
+        .menu-item:hover, .menu-item.active { background: rgba(255,255,255,0.1); }
+        .menu-item:hover a, .menu-item.active a { color: white; }
+
+        /* Main Content */
+        .main-content { flex: 1; padding: 40px; margin-left: 260px; }
+        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); max-width: 1000px; margin: 0 auto; position: relative; }
+
+        /* Header đơn hàng */
+        .order-header { border-bottom: 2px solid #f1f1f1; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
+        .order-title { font-size: 26px; font-weight: 800; color: #2d3436; }
+        .order-date { color: #888; font-size: 14px; margin-top: 5px; display: flex; align-items: center; gap: 5px; }
+
+        /* Nút hành động (Action Buttons) */
+        .action-buttons { display: flex; gap: 10px; margin-top: 10px; }
+        .btn { padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; transition: 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-primary { background: #0984e3; color: white; } .btn-primary:hover { background: #74b9ff; }
+        .btn-success { background: #00b894; color: white; } .btn-success:hover { background: #55efc4; }
+        .btn-danger { background: #d63031; color: white; } .btn-danger:hover { background: #fab1a0; }
+        .btn-secondary { background: #b2bec3; color: #2d3436; } .btn-secondary:hover { background: #dfe6e9; }
+        .btn-print { background: #636e72; color: white; margin-left: auto; } .btn-print:hover { background: #2d3436; }
+
+        /* Thông tin chi tiết */
+        .info-section { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px; background: #fdfdfd; padding: 20px; border-radius: 10px; border: 1px solid #eee; }
+        .info-box h4 { font-size: 16px; color: #2d3436; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .info-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
+        .info-label { color: #636e72; font-weight: 500; }
+        .info-value { font-weight: bold; color: #2d3436; text-align: right; }
+
+        /* Bảng sản phẩm */
+        table { width: 100%; border-collapse: separate; border-spacing: 0 10px; margin-top: 10px; }
+        th { text-align: left; padding: 15px; color: #636e72; font-weight: 600; text-transform: uppercase; font-size: 13px; letter-spacing: 1px; border-bottom: 2px solid #eee; }
+        td { padding: 15px; background: white; border-top: 1px solid #f1f1f1; border-bottom: 1px solid #f1f1f1; vertical-align: middle; }
+        tr td:first-child { border-left: 1px solid #f1f1f1; border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
+        tr td:last-child { border-right: 1px solid #f1f1f1; border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
+
+        .product-img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; border: 1px solid #eee; margin-right: 15px; }
+        .item-name { font-weight: 700; color: #2d3436; font-size: 15px; }
+        .no-img { width: 60px; height: 60px; border-radius: 8px; background: #eee; display: inline-flex; align-items: center; justify-content: center; color: #aaa; margin-right: 15px; font-size: 10px; }
+
+        /* Footer tổng tiền */
+        .order-footer { margin-top: 30px; padding-top: 20px; border-top: 2px dashed #b2bec3; display: flex; justify-content: flex-end; }
+        .total-box { text-align: right; background: #fff8e1; padding: 20px 30px; border-radius: 10px; border: 1px solid #ffeaa7; }
+        .total-label { font-size: 16px; color: #666; margin-bottom: 5px; }
+        .total-price { font-size: 32px; color: #d63031; font-weight: 800; }
+
+        /* Trạng thái */
+        .badge { padding: 6px 12px; border-radius: 30px; font-size: 13px; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; }
+        .badge-pending { background: #ffeaa7; color: #d35400; }
+        .badge-shipping { background: #74b9ff; color: #0984e3; }
+        .badge-completed { background: #55efc4; color: #00b894; }
+        .badge-cancelled { background: #fab1a0; color: #d63031; }
+
+        /* Print Mode */
+        @media print {
+            .sidebar, .btn-back, .action-buttons, .btn-print { display: none !important; }
+            .main-content { margin: 0; padding: 0; }
+            .card { box-shadow: none; border: 1px solid #000; }
+            body { background: white; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="sidebar">
+    <div class="logo"><a href="/">☕ MOON ADMIN</a></div>
+    <ul class="menu-list">
+        <li class="menu-item"><a href="/"><i class="fas fa-home"></i> Xem Trang Chủ</a></li>
+        <li class="menu-item"><a href="/admin/add-product"><i class="fas fa-coffee"></i> Quản lý Sản Phẩm</a></li>
+        <li class="menu-item active"><a href="/admin/orders"><i class="fas fa-clipboard-list"></i> Quản lý Đơn Hàng</a></li>
+        <li class="menu-item"><a href="/admin/revenue"><i class="fas fa-chart-line"></i> Báo Cáo Doanh Thu</a></li>
+        <li class="menu-item" style="margin-top: auto;"><a href="/logout" style="color: #ff7675;"><i class="fas fa-sign-out-alt"></i> Đăng Xuất</a></li>
+    </ul>
+</nav>
+
+<main class="main-content">
+    <div class="card">
+
+        <div class="order-header">
+            <div>
+                <div class="order-title">Đơn hàng #<span th:text="${order.id}"></span></div>
+                <div class="order-date">
+                    <i class="far fa-clock"></i>
+                    Ngày đặt: <span th:text="${#dates.format(order.orderDate, 'dd/MM/yyyy HH:mm')}"></span>
+                </div>
+            </div>
+
+            <div style="text-align: right;">
+                <div style="margin-bottom: 10px;">
+                    <span th:if="${order.status == 'Pending'}" class="badge badge-pending"><i class="fas fa-hourglass-half"></i> Chờ xử lý</span>
+                    <span th:if="${order.status == 'Shipping'}" class="badge badge-shipping"><i class="fas fa-shipping-fast"></i> Đang giao hàng</span>
+                    <span th:if="${order.status == 'Completed'}" class="badge badge-completed"><i class="fas fa-check-circle"></i> Hoàn thành</span>
+                    <span th:if="${order.status == 'Cancelled'}" class="badge badge-cancelled"><i class="fas fa-times-circle"></i> Đã hủy</span>
+                </div>
+
+                <div class="action-buttons">
+                    <button onclick="window.print()" class="btn btn-print"><i class="fas fa-print"></i> In Hóa Đơn</button>
+
+                    <form th:if="${order.status == 'Pending'}" action="/admin/orders/update-status" method="post">
+                        <input type="hidden" name="id" th:value="${order.id}">
+                        <input type="hidden" name="status" value="Shipping">
+                        <button type="submit" class="btn btn-primary">🚀 Duyệt & Giao</button>
+                    </form>
+
+                    <form th:if="${order.status == 'Shipping'}" action="/admin/orders/update-status" method="post">
+                        <input type="hidden" name="id" th:value="${order.id}">
+                        <input type="hidden" name="status" value="Completed">
+                        <button type="submit" class="btn btn-success">✅ Khách đã nhận</button>
+                    </form>
+
+                    <form th:if="${order.status != 'Completed' && order.status != 'Cancelled'}" action="/admin/orders/update-status" method="post">
+                        <input type="hidden" name="id" th:value="${order.id}">
+                        <input type="hidden" name="status" value="Cancelled">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn chắc chắn muốn hủy đơn này?')">❌ Hủy đơn</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div class="info-box">
+                <h4><i class="fas fa-user-circle"></i> Khách hàng</h4>
+                <div class="info-row"><span class="info-label">Họ tên:</span> <span class="info-value" th:text="${order.customerName}"></span></div>
+                <div class="info-row"><span class="info-label">Số điện thoại:</span> <span class="info-value" th:text="${order.customerPhone}"></span></div>
+                <div class="info-row"><span class="info-label">Hình thức thanh toán:</span> <span class="info-value badge" style="background: #eee; color: #333;" th:text="${order.paymentMethod}">COD</span></div>
+            </div>
+
+            <div class="info-box">
+                <h4><i class="fas fa-truck"></i> Giao hàng tới</h4>
+                <div class="info-row"><span class="info-label">Địa chỉ:</span> <span class="info-value" th:text="${order.customerAddress != null ? order.customerAddress : 'Tại quán'}"></span></div>
+                <div class="info-row">
+                    <span class="info-label">Ghi chú của khách:</span>
+                    <span class="info-value" style="color: #e67e22; font-style: italic;" th:text="${order.note != null && order.note != '' ? order.note : 'Không có ghi chú'}"></span>
+                </div>
+            </div>
+        </div>
+
+        <h4 style="margin-bottom: 15px; color: #2d3436; font-weight: 700; text-transform: uppercase;">🛒 Danh sách món đã đặt</h4>
+        <table>
+            <thead>
+            <tr>
+                <th style="width: 50%">Sản phẩm</th>
+                <th style="width: 15%; text-align: center;">Số lượng</th>
+                <th style="width: 15%">Đơn giá</th>
+                <th style="width: 20%; text-align: right;">Thành tiền</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${order.orderDetails == null || order.orderDetails.isEmpty()}">
+                <td colspan="4" style="text-align: center; color: #999; padding: 30px;">
+                    <i class="fas fa-box-open" style="font-size: 40px; margin-bottom: 10px;"></i><br>
+                    Không có thông tin chi tiết sản phẩm.
+                </td>
+            </tr>
+
+            <tr th:each="detail : ${order.orderDetails}">
+                <td>
+                    <div style="display: flex; align-items: center;">
+                        <img th:if="${detail.product != null and detail.product.imageName != null}"
+                             th:src="@{'/images/products/' + ${detail.product.imageName}}" class="product-img">
+                        <div th:if="${detail.product == null or detail.product.imageName == null}" class="no-img"><i class="fas fa-image"></i></div>
+
+                        <span class="item-name" th:text="${detail.product != null ? detail.product.name : 'Sản phẩm đã bị xóa'}"></span>
+                    </div>
+                </td>
+
+                <td style="text-align: center; font-weight: bold; font-size: 16px; color: #2d3436;" th:text="'x' + ${detail.quantity}">x1</td>
+
+                <td th:text="${#numbers.formatDecimal(detail.price, 0, 'POINT', 0, 'POINT')} + ' đ'" style="color: #636e72;">0 đ</td>
+
+                <td style="text-align: right; font-weight: bold; color: #2d3436;"
+                    th:text="${#numbers.formatDecimal(detail.price * detail.quantity, 0, 'POINT', 0, 'POINT')} + ' đ'">
+                    0 đ
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="order-footer">
+            <div class="total-box">
+                <div class="total-label">Tổng tiền thanh toán</div>
+                <div class="total-price" th:text="${#numbers.formatDecimal(order.totalPrice, 0, 'POINT', 0, 'POINT')} + ' đ'">
+                    0 đ
+                </div>
+            </div>
+        </div>
+
+        <a href="/admin/orders" class="btn btn-secondary btn-back" style="margin-top: 20px;"><i class="fas fa-arrow-left"></i> Quay lại danh sách</a>
+
+    </div>
+</main>
+</body>
+</html>
